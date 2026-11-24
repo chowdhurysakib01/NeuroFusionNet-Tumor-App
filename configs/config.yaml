@@ -1,0 +1,77 @@
+project:
+  name: Brain_Tumor_MRI_Classification
+  seed: 42
+  device: cuda
+dataset:
+  main_dir: Dataset/Main
+  external_dir: Dataset/External
+  classes:
+  - glioma
+  - meningioma
+  - notumor
+  - pituitary
+  num_classes: 4
+  image_size: 224
+  channels: 3
+split:
+  train: 0.8
+  validation: 0.1
+  test: 0.1
+  random_state: 411000465
+  stratified: true
+  force_new: false
+training:
+  epochs: 50
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  early_stopping_patience: 10
+  mixed_precision: true
+  gradient_clipping: 1.0
+  effective_batch_size: 8
+  optimizer: AdamW
+  scheduler: CosineAnnealingLR
+  loss: CrossEntropyLoss
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 2
+  model_batch_sizes:
+    custom_cnn: 2
+    densenet169: 2
+    mobilenetv3: 2
+    resnet50: 2
+    vgg19: 2
+    densenet169_resnet50_fusion: 2
+    neurofusionnet: 2
+  gradient_accumulation:
+    custom_cnn: 4
+    densenet169: 4
+    mobilenetv3: 4
+    resnet50: 4
+    vgg19: 4
+    densenet169_resnet50_fusion: 4
+    neurofusionnet: 4
+evaluation:
+  metrics:
+  - accuracy
+  - precision
+  - recall
+  - macro_f1
+  - balanced_accuracy
+  - roc_auc
+  - pr_auc
+  confusion_matrix: true
+  roc_curve: true
+  pr_curve: true
+  training_validation_loss: true
+  benchmark: true
+xai:
+  methods:
+  - gradcam
+  - gradcam++
+  samples_per_class: 5
+models:
+  pretrained: true
+  selection_metric: val_macro_f1
+  save_best_only: false
+  save_last_checkpoint: true
